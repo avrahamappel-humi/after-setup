@@ -1,0 +1,42 @@
+#!/bin/bash
+
+applications=applications/*
+
+# Add githooks
+for p in $applications
+do
+    cp ./prepare-commit-msg "$p/.git/hooks/prepare-commit-msg"
+    # Not sure if this is necessary
+    # chmod +x "$p/.git/hooks/prepare-commit-msg"
+done
+
+# Add Nix shells
+for p in $applications
+do
+    shell="./shells/$(basename $p)" 
+
+    if [ -f $shell ]
+    then
+        # Symbolic link so we can continue editing
+        rm "$p/shell.nix"
+        ln -s $shell "$p/shell.nix"
+    fi
+
+    # Sometimes there already is a shell.nix in the repo
+    if [ -f "$p/shell.nix" ]
+    then
+        echo use nix > "$p/.envrc"
+        echo .direnv/\n.envrc\n >> "$p/.git/index/exclude"
+        (cd $p; direnv allow)
+    fi
+
+    # Solargraph
+    if [ basename $p == "payroll" ]
+    then
+        cp ./solargraph.yml "$p/.solargraph.yml"
+        echo >> "$p/.git/index/exclude" << EOF
+gemset.nix
+.solargraph.yml
+EOF
+    fi
+done
