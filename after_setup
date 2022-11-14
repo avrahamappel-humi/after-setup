@@ -1,11 +1,13 @@
 #!/bin/bash
 
 applications=applications/*
+# MacOS doesn't include realpath, until Ventura
+here=$(dirname $(readlink -f $0 ))
 
 # Add githooks
 for p in $applications
 do
-    cp ./prepare-commit-msg "$p/.git/hooks/prepare-commit-msg"
+    cp "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
     # Not sure if this is necessary
     # chmod +x "$p/.git/hooks/prepare-commit-msg"
 done
@@ -13,7 +15,7 @@ done
 # Add Nix shells
 for p in $applications
 do
-    shell="./shells/$(basename $p)" 
+    shell="$here/shells/$(basename $p)"
 
     if [ -f $shell ]
     then
@@ -26,15 +28,15 @@ do
     if [ -f "$p/shell.nix" ]
     then
         echo use nix > "$p/.envrc"
-        echo .direnv/\n.envrc\n >> "$p/.git/index/exclude"
+        echo .direnv/\n.envrc\n >> "$p/.git/info/exclude"
         (cd $p; direnv allow)
     fi
 
     # Solargraph
     if [ basename $p == "payroll" ]
     then
-        cp ./solargraph.yml "$p/.solargraph.yml"
-        echo >> "$p/.git/index/exclude" << EOF
+        cp "$here/solargraph.yml" "$p/.solargraph.yml"
+        echo >> "$p/.git/info/exclude" << EOF
 gemset.nix
 .solargraph.yml
 EOF
