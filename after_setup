@@ -7,7 +7,7 @@ here=$(dirname $(readlink -f $0 ))
 # Add githooks
 for p in $applications
 do
-    cp "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
+    ln -s "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
 done
 
 # Add Nix shells
