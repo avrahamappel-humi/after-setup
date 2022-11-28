@@ -2,7 +2,7 @@
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    php
+    php81
     phpPackages.composer
     nodejs-16_x
     nodePackages.intelephense
