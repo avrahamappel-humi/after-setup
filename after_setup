@@ -22,6 +22,8 @@ do
 
     if test -f $shell
     then
+        echo "Installing nix shell in $p"
+
         # Symbolic link so we can continue editing
         rm -f "$p/shell.nix"
         ln -s -f $shell "$p/shell.nix"
@@ -29,9 +31,18 @@ do
     fi
 
     # Sometimes there already is a shell.nix in the repo
-    if test -f "$p/{shell,default}.nix"
+    if test -n "$(find $p -maxdepth 1 -name '*.nix' -print -quit)"
     then
-        echo use nix > "$p/.envrc"
+        echo "Setting up direnv to use the nix shell"
+
+        if test -n "$(find $p -maxdepth 1 -name '{shell,default}.nix' -print -quit)"
+        then
+            echo use nix > "$p/.envrc"
+        elif test -f flake.nix
+        then
+            echo use flake > "$p/.envrc"
+        fi
+
         cat >> "$p/.git/info/exclude" << EOF
 .direnv/
 .envrc
