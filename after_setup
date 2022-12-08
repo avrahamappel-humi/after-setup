@@ -7,7 +7,12 @@ here=$(dirname $(readlink -f $0 ))
 # Add githooks
 for p in $applications
 do
-    ln -s "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
+    if ! test -d "$p/.git"
+    then
+        continue
+    fi
+
+    ln -s -f "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
 done
 
 # Add Nix shells
@@ -19,12 +24,12 @@ do
     then
         # Symbolic link so we can continue editing
         rm -f "$p/shell.nix"
-        ln -s $shell "$p/shell.nix"
+        ln -s -f $shell "$p/shell.nix"
         echo shell.nix >> "$p/.git/info/exclude"
     fi
 
     # Sometimes there already is a shell.nix in the repo
-    if test -f "$p/shell.nix"
+    if test -f "$p/{shell,default}.nix"
     then
         echo use nix > "$p/.envrc"
         cat >> "$p/.git/info/exclude" << EOF
