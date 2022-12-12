@@ -35,12 +35,11 @@ do
     then
         echo "Setting up direnv to use the nix shell"
 
-        if test -n "$(find $p -maxdepth 1 -name '{shell,default}.nix' -print -quit)"
-        then
-            echo use nix > "$p/.envrc"
-        elif test -f flake.nix
+        if test -f flake.nix
         then
             echo use flake > "$p/.envrc"
+        else
+            echo use nix > "$p/.envrc"
         fi
 
         cat >> "$p/.git/info/exclude" << EOF
