@@ -3,7 +3,7 @@
 pkgs.mkShell
 {
   buildInputs = with pkgs; [
-    php80
+    php81
     phpPackages.composer
     nodejs # For Prettier
     nodePackages.intelephense
