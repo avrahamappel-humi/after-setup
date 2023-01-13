@@ -2,7 +2,7 @@
 
 applications=applications/*
 # MacOS doesn't include realpath, until Ventura
-here=$(dirname $(readlink -f $0 ))
+here=$(realpath $0)
 
 # Add githooks
 for p in $applications
