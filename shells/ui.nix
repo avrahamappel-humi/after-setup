@@ -5,5 +5,6 @@ pkgs.mkShell {
     [
       nodejs
       nodePackages.npm
+      nodePackages.typescript-language-server
     ];
 }
