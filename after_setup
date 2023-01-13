@@ -53,6 +53,12 @@ EOF
     if test "$(basename $p)" == "payroll"
     then
         cp "$here/solargraph.yml" "$p/.solargraph.yml"
+        # @todo use direnv layouts instead
+        # ```
+        # layout php
+        # layout ruby
+        # layout node
+        # ```
         cat >> "$p/.git/info/exclude" << EOF
 gemset.nix
 .solargraph.yml
