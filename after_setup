@@ -1,6 +1,7 @@
 #!/bin/bash
 
-applications=applications/*
+applications="$HOME/humility/applications/*"
+
 # MacOS doesn't include realpath, until Ventura
 here=$(dirname $(readlink -f $0 ))
 
@@ -46,16 +47,29 @@ do
 .direnv/
 .envrc
 EOF
-        (cd $p; direnv allow)
+        direnv allow $p 
     fi
 
-    # Solargraph
     if test "$(basename $p)" == "payroll"
     then
-        cp "$here/solargraph.yml" "$p/.solargraph.yml"
+        # This will cause gems to be installed in the .direnv directory
+        echo 'layout ruby' >> "$p/.envrc"
+
+        ln -s -f "$here/solargraph.yml" "$p/.solargraph.yml"
+
         cat >> "$p/.git/info/exclude" << EOF
-gemset.nix
 .solargraph.yml
+app/rails.rb
 EOF
+
+        # Install gems and set up Solargraph
+        (
+            cd $p
+            direnv exec $p bundle install
+            direnv exec $p solargraph download-core
+            direnv exec $p solargraph bundle
+            cd "$p/app"
+            nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
+        )
     fi
 done

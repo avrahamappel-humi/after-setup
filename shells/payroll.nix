@@ -1,28 +1,18 @@
 { pkgs ? import <nixpkgs> { } }:
 
-let
-  env = with pkgs; bundlerEnv {
-    name = "payroll-bundler-env";
-    inherit ruby;
-    gemfile = ./Gemfile;
-    lockfile = ./Gemfile.lock;
-    gemset = ./gemset.nix;
-    copyGemFiles = true;
-  };
-in
 pkgs.mkShell {
-  name = "payroll";
-  buildInputs = with pkgs; [
-    env
-    env.wrappedRuby
-    env.bundler
-    bundix
-    solargraph
+  nativeBuildInputs = with pkgs; [
+    # Required for building postgres gem
+    postgresql
   ];
 
-  # Can't set up aliases here, since it's run in a subshell
+  buildInputs = with pkgs; [
+    ruby_3_1
+    rubyPackages_3_1.solargraph
+  ];
+
   shellHook = ''
-    echo To update deps, run this
-    echo "rm gemset.nix; bundix; solargraph bundle"
+    # Required for building thin gem
+    bundle config build.thin -fdeclspec
   '';
 }
