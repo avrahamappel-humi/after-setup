@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_PATH="$HOME/humility/applications/"
+BASE_PATH="$HOME/humility/applications"
 
 ANGULAR_PROJECTS=(ui)
 LARAVEL_PROJECTS=(hr admin)
@@ -85,8 +85,7 @@ EOF
     # Install gems and set up Solargraph
     (
         cd "$p" || return
-        nix-shell -p bundix --run bundix
-        mv gemset.nix gemset.base.nix
+        nix-shell -p bundix --run 'bundix --gemset=gemset.base.nix'
         cp "$here/rails/gemset.nix" gemset.nix
         direnv exec "$p" solargraph download-core
         direnv exec "$p" solargraph bundle

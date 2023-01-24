@@ -7,6 +7,7 @@ let
     ruby = pkgs.ruby_3_1;
     # inherit (pkgs) ruby;
     gemdir = "${builtins.getEnv "HOME"}/humility/applications/payroll";
+    ignoreCollisions = true;
   };
 in
 pkgs.mkShell {
