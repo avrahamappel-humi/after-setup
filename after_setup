@@ -1,6 +1,12 @@
 #!/bin/bash
 
-applications="$HOME/humility/applications/*"
+BASE_PATH="$HOME/humility/applications/"
+
+ANGULAR_PROJECTS=(ui)
+LARAVEL_PROJECTS=(hr admin)
+RAILS_PROJECTS=(payroll)
+
+applications="$BASE_PATH/*"
 
 # MacOS doesn't include realpath, until Ventura
 here=$(dirname "$(readlink -f "$0" )")
@@ -49,27 +55,43 @@ do
 EOF
         direnv allow "$p" 
     fi
+done
 
-    if test "$(basename $p)" == "payroll"
-    then
-        # This will cause gems to be installed in the .direnv directory
-        echo 'layout ruby' >> "$p/.envrc"
+# Set up Laravel projects
+for p in "${LARAVEL_PROJECTS[@]}"
+do
+    echo layout php >> "$BASE_PATH/$p/.envrc"
+done
 
-        ln -s -f "$here/solargraph.yml" "$p/.solargraph.yml"
+# Set up Angular projects
+for p in "${ANGULAR_PROJECTS[@]}"
+do
+    echo layout node >> "$BASE_PATH/$p/.envrc"
+done
 
-        cat >> "$p/.git/info/exclude" << EOF
+for project in "${RAILS_PROJECTS[@]}"
+do
+    p="$BASE_PATH/$project"
+
+    ln -s -f "$here/solargraph.yml" "$p/.solargraph.yml"
+
+    cat >> "$p/.git/info/exclude" << EOF
 .solargraph.yml
 app/rails.rb
+gemset.nix
+gemset.base.nix
 EOF
 
-        # Install gems and set up Solargraph
-        (
-            cd $p
-            direnv exec $p bundle install
-            direnv exec $p solargraph download-core
-            direnv exec $p solargraph bundle
-            cd "$p/app"
-            nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
-        )
-    fi
+    # Install gems and set up Solargraph
+    (
+        cd "$p" || return
+        nix-shell -p bundix --run bundix
+        mv gemset.nix gemset.base.nix
+        cp "$here/rails/gemset.nix" gemset.nix
+        direnv exec "$p" solargraph download-core
+        direnv exec "$p" solargraph bundle
+        # Add shim file for solargraph (may not be necessary if we're using solargraph-rails
+        # cd "$p/app" | return
+        # nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
+    )
 done
