@@ -3,7 +3,7 @@
 applications="$HOME/humility/applications/*"
 
 # MacOS doesn't include realpath, until Ventura
-here=$(dirname $(readlink -f $0 ))
+here=$(dirname "$(readlink -f "$0" )")
 
 # Add githooks
 for p in $applications
@@ -19,20 +19,20 @@ done
 # Add Nix shells
 for p in $applications
 do
-    shell="$here/shells/$(basename $p).nix"
+    shell="$here/shells/$(basename "$p").nix"
 
-    if test -f $shell
+    if test -f "$shell"
     then
         echo "Installing nix shell in $p"
 
         # Symbolic link so we can continue editing
         rm -f "$p/shell.nix"
-        ln -s -f $shell "$p/shell.nix"
+        ln -s -f "$shell" "$p/shell.nix"
         echo shell.nix >> "$p/.git/info/exclude"
     fi
 
     # Sometimes there already is a shell.nix in the repo
-    if test -n "$(find $p -maxdepth 1 -name '*.nix' -print -quit)"
+    if test -n "$(find "$p" -maxdepth 1 -name '*.nix' -print -quit)"
     then
         echo "Setting up direnv to use the nix shell"
 
@@ -47,7 +47,7 @@ do
 .direnv/
 .envrc
 EOF
-        direnv allow $p 
+        direnv allow "$p" 
     fi
 
     if test "$(basename $p)" == "payroll"
