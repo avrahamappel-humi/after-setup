@@ -73,19 +73,19 @@ for project in "${RAILS_PROJECTS[@]}"
 do
     p="$BASE_PATH/$project"
 
-    ln -s -f "$here/solargraph.yml" "$p/.solargraph.yml"
+    ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
 
     cat >> "$p/.git/info/exclude" << EOF
 .solargraph.yml
 app/rails.rb
 gemset.nix
-gemset.base.nix
+gemset.project.nix
 EOF
 
     # Install gems and set up Solargraph
     (
         cd "$p" || return
-        nix-shell -p bundix --run 'bundix --gemset=gemset.base.nix'
+        nix-shell -p bundix --run 'bundix --gemset=gemset.project.nix'
         cp "$here/rails/gemset.nix" gemset.nix
         direnv exec "$p" solargraph download-core
         direnv exec "$p" solargraph bundle

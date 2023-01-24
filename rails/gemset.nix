@@ -332,4 +332,4 @@
     };
     version = "0.9.28";
   };
-} // import ./gemset.base.nix
+} // import ./gemset.project.nix
