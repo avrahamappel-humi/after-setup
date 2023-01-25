@@ -55,21 +55,16 @@ EOF
         # This will cause gems to be installed in the .direnv directory
         echo 'layout ruby' >> "$p/.envrc"
 
-        ln -s -f "$here/solargraph.yml" "$p/.solargraph.yml"
+        ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
+        ln -s -f "$here/rails/solargraph-setup.sh" "$p/"
 
         cat >> "$p/.git/info/exclude" << EOF
 .solargraph.yml
 app/rails.rb
+solargraph-setup.sh
 EOF
 
         # Install gems and set up Solargraph
-        (
-            cd $p
-            direnv exec $p bundle install
-            direnv exec $p solargraph download-core
-            direnv exec $p solargraph bundle
-            cd "$p/app"
-            nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
-        )
+        "$p/solargraph-setup.sh"
     fi
 done
