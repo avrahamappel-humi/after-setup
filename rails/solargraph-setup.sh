@@ -4,13 +4,12 @@
 
 RAILS_DIR=$(realpath "$(dirname "$0")")
 
-# Install PayRoute gems
-cd "$RAILS_DIR/engines/PayRoute" || return
-direnv exec "$RAILS_DIR" bundle install
-
 # Install main app gems
 cd "$RAILS_DIR" || return
+docker-compose run payroll cp -r -u /usr/local/bundle/* /myapp/.direnv/ruby
+direnv exec "$RAILS_DIR" bundle config build.thin -fdeclspec
 direnv exec "$RAILS_DIR" bundle install
+direnv exec "$RAILS_DIR" gem install solargraph solargraph-rails
 direnv exec "$RAILS_DIR" solargraph download-core
 direnv exec "$RAILS_DIR" solargraph bundle
 
