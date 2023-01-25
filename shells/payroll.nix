@@ -24,16 +24,14 @@ let
     });
   });
 
-  env = rubyNix {
+  bundlerEnv = rubyNix {
     name = "payroll-bundler-env";
     ruby = pkgs.ruby_3_1;
     gemset = "${builtins.getEnv "HOME"}/humility/applications/payroll/gemset.nix";
   };
 in
 pkgs.mkShell {
-  buildInputs = with env; [
-    # env
-    envMinimal
-    # ruby
+  buildInputs = [
+    bundlerEnv.env
   ];
 }
