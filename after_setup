@@ -1,6 +1,12 @@
 #!/bin/bash
 
-applications="$HOME/humility/applications/*"
+BASE_PATH="$HOME/humility/applications/"
+
+ANGULAR_PROJECTS=(ui)
+LARAVEL_PROJECTS=(hr admin)
+RAILS_PROJECTS=(payroll)
+
+applications="$BASE_PATH/*"
 
 # MacOS doesn't include realpath, until Ventura
 here=$(dirname "$(readlink -f "$0" )")
@@ -49,22 +55,40 @@ do
 EOF
         direnv allow "$p" 
     fi
+done
 
-    if test "$(basename $p)" == "payroll"
-    then
-        # This will cause gems to be installed in the .direnv directory
-        echo 'layout ruby' >> "$p/.envrc"
+# Set up Laravel projects
+for project in "${LARAVEL_PROJECTS[@]}"
+do
+    p="$BASE_PATH/$project"
 
-        ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
-        ln -s -f "$here/rails/solargraph-setup.sh" "$p/"
+    echo layout php >> "$p/.envrc"
+done
 
-        cat >> "$p/.git/info/exclude" << EOF
+# Set up Angular projects
+for project in "${ANGULAR_PROJECTS[@]}"
+do
+    p="$BASE_PATH/$project"
+
+    echo layout node >> "$p/.envrc"
+done
+
+for project in "${RAILS_PROJECTS[@]}"
+do
+    p="$BASE_PATH/$project"
+
+    # This will cause gems to be installed in the .direnv directory
+    echo 'layout ruby' >> "$p/.envrc"
+
+    ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
+    ln -s -f "$here/rails/solargraph-setup.sh" "$p/"
+
+    cat >> "$p/.git/info/exclude" << EOF
 .solargraph.yml
 app/rails.rb
 solargraph-setup.sh
 EOF
 
-        # Install gems and set up Solargraph
-        "$p/solargraph-setup.sh"
-    fi
+    # Install gems and set up Solargraph
+    "$p/solargraph-setup.sh"
 done
