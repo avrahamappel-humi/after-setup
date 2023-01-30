@@ -71,6 +71,7 @@ do
     p="$BASE_PATH/$project"
 
     echo layout node >> "$p/.envrc"
+    direnv exec "$p" npm install --no-save @angular/language-server
 done
 
 for project in "${RAILS_PROJECTS[@]}"
