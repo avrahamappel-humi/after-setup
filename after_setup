@@ -63,6 +63,10 @@ do
     p="$BASE_PATH/$project"
 
     echo layout php >> "$p/.envrc"
+
+    echo "Creating Psalm config file"
+    direnv exec "$p" psalm --init
+    echo "psalm.xml" >> "$p/.git/info/exclude"
 done
 
 # Set up Angular projects
