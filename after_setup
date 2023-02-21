@@ -58,15 +58,25 @@ EOF
 done
 
 # Set up Laravel projects
-for p in "${LARAVEL_PROJECTS[@]}"
+for project in "${LARAVEL_PROJECTS[@]}"
 do
-    echo layout php >> "$BASE_PATH/$p/.envrc"
+    p="$BASE_PATH/$project"
+
+    echo layout php >> "$p/.envrc"
+
+    echo "Creating Psalm config file"
+    direnv exec "$p" psalm --init
+    echo "psalm.xml" >> "$p/.git/info/exclude"
 done
 
 # Set up Angular projects
-for p in "${ANGULAR_PROJECTS[@]}"
+for project in "${ANGULAR_PROJECTS[@]}"
 do
-    echo layout node >> "$BASE_PATH/$p/.envrc"
+    p="$BASE_PATH/$project"
+
+    echo layout node >> "$p/.envrc"
+    direnv exec "$p" npm ci
+    direnv exec "$p" npm install --no-save @angular/language-server
 done
 
 for project in "${RAILS_PROJECTS[@]}"
