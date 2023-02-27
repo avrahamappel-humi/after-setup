@@ -1,16 +1,18 @@
 { pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
 
 let
-  phpactor = import ./phpactor { };
-  psalm = import ./psalm { };
+  php = pkgs.php81.withExtensions ({ enabled, all }: enabled ++ [ all.imagick ]);
+  phpPackages = php.packages;
+  phpactor = import ./phpactor { inherit php phpPackages; };
+  psalm = import ./psalm { inherit php phpPackages; };
 in
 pkgs.mkShell
 {
   buildInputs = with pkgs; [
     nodejs # For Prettier
     nodePackages.intelephense
-    php81
-    php81Packages.composer
+    php
+    phpPackages.composer
     phpactor
     psalm
   ];
