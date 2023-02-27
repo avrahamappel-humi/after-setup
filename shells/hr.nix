@@ -2,9 +2,7 @@
 
 let
   php = pkgs.php81.withExtensions ({ enabled, all }: enabled ++ [ all.imagick ]);
-  phpPackages = php.packages;
-  phpactor = import ./phpactor { inherit php phpPackages; };
-  psalm = import ./psalm { inherit php phpPackages; };
+  php-tools = (import ./php-tools.nix) { inherit php; };
 in
 pkgs.mkShell
 {
@@ -12,8 +10,7 @@ pkgs.mkShell
     nodejs # For Prettier
     nodePackages.intelephense
     php
-    phpPackages.composer
-    phpactor
-    psalm
+    php.packages.composer
+    php-tools
   ];
 }

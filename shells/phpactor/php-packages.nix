@@ -245,10 +245,10 @@ let
     "kelunik/certificate" = {
       targetDir = "";
       src = composerEnv.buildZipPackage {
-        name = "kelunik-certificate-56542e62d51533d04d0a9713261fea546bff80f6";
+        name = "kelunik-certificate-7e00d498c264d5eb4f78c69f41c8bd6719c0199e";
         src = fetchurl {
-          url = "https://api.github.com/repos/kelunik/certificate/zipball/56542e62d51533d04d0a9713261fea546bff80f6";
-          sha256 = "049izah872vw9rd5zydfy7hfpn2lwpn0jqpjw7xwzmabyv74d6kf";
+          url = "https://api.github.com/repos/kelunik/certificate/zipball/7e00d498c264d5eb4f78c69f41c8bd6719c0199e";
+          sha256 = "1c4dzp8xyq9z1qa4cxkdzqh8i7n5v2yq7sj0j1dc0wx9fknp3shj";
         };
       };
     };
@@ -425,10 +425,10 @@ let
     "phpactor/container" = {
       targetDir = "";
       src = composerEnv.buildZipPackage {
-        name = "phpactor-container-14e98f4b381a7dd89d5509edb76deacb71d4deae";
+        name = "phpactor-container-0ff1ec3e99063e75e136947672bedfe685b84777";
         src = fetchurl {
-          url = "https://api.github.com/repos/phpactor/container/zipball/14e98f4b381a7dd89d5509edb76deacb71d4deae";
-          sha256 = "1mszfziilaqkpm76nb7fd4bh0vnlch715i0n1xv9nbhz7jrshaxf";
+          url = "https://api.github.com/repos/phpactor/container/zipball/0ff1ec3e99063e75e136947672bedfe685b84777";
+          sha256 = "1hpizl5fkpqvx1f3yz6mpplfb23fq5c6visand7l3fimp67mzkga";
         };
       };
     };

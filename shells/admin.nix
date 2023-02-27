@@ -2,16 +2,13 @@
 
 let
   php = pkgs.php81;
-  phpPackages = php.packages;
-  phpactor = import ./phpactor { inherit php phpPackages; };
-  psalm = import ./psalm { inherit php phpPackages; };
+  php-tools = (import ./php-tools.nix) { inherit php; };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     php
-    phpPackages.composer
-    phpactor
-    psalm
+    php81Packages.composer
+    php-tools
     nodejs-16_x
     nodePackages.intelephense
     nodePackages.vls
