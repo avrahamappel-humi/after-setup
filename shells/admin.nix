@@ -2,13 +2,13 @@
 
 let
   php = pkgs.php81;
-  php-tools = (import ./php-tools.nix) { inherit php; };
+
+  phpTools = import ./php-tools.nix { inherit pkgs php; };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    php
     php81Packages.composer
-    php-tools
+    phpTools
     nodejs-16_x
     nodePackages.intelephense
     nodePackages.vls

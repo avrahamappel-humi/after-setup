@@ -1,12 +1,16 @@
-{ php }:
+{ pkgs, php }:
 
 let
-  phpPackages = php.packages;
-  noDev = true;
-  phpactor = import ./phpactor { inherit php phpPackages noDev; };
-  psalm = import ./psalm { inherit php phpPackages noDev; };
+  php' = php.buildEnv {
+    extraConfig = "memory_limit=8G";
+  };
+  phpactor = import ./phpactor {
+    inherit pkgs;
+    php = php';
+  };
 in
 [
+  php'
   phpactor
-  psalm
+  php.packages.psalm
 ]
