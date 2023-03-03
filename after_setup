@@ -62,9 +62,12 @@ for project in "${LARAVEL_PROJECTS[@]}"
 do
     p="$BASE_PATH/$project"
 
+    echo "Setting up Laravel project in $p"
+
     echo layout php >> "$p/.envrc"
 
     echo "Creating Psalm config file"
+    cd "$p" || return
     direnv exec "$p" psalm --init
     echo "psalm.xml" >> "$p/.git/info/exclude"
 done
@@ -74,7 +77,12 @@ for project in "${ANGULAR_PROJECTS[@]}"
 do
     p="$BASE_PATH/$project"
 
+    echo "Setting up Angular project in $p"
+
     echo layout node >> "$p/.envrc"
+
+    echo "Installing ngserver"
+    cd "$p" || return
     direnv exec "$p" npm ci
     direnv exec "$p" npm install --no-save @angular/language-server
 done
@@ -82,6 +90,8 @@ done
 for project in "${RAILS_PROJECTS[@]}"
 do
     p="$BASE_PATH/$project"
+
+    echo "Setting up Rails project in $p"
 
     ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
 
