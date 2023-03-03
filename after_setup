@@ -6,25 +6,23 @@ ANGULAR_PROJECTS=(ui)
 LARAVEL_PROJECTS=(hr admin)
 RAILS_PROJECTS=(payroll)
 
-applications="$BASE_PATH/*"
-
 # MacOS doesn't include realpath, until Ventura
 here=$(dirname "$(readlink -f "$0" )")
 
 # Add githooks
-for p in $applications
-do
+function setup_githooks {
+    p="$1"
     if ! test -d "$p/.git"
     then
-        continue
+        return
     fi
 
     ln -s -f "$here/prepare-commit-msg" "$p/.git/hooks/prepare-commit-msg"
-done
+}
 
 # Add Nix shells
-for p in $applications
-do
+function setup_nix {
+    p="$1"
     shell="$here/shells/$(basename "$p").nix"
 
     if test -f "$shell"
@@ -53,9 +51,8 @@ do
 .direnv/
 .envrc
 EOF
-        direnv allow "$p" 
     fi
-done
+}
 
 # Set up Laravel projects
 for project in "${LARAVEL_PROJECTS[@]}"
@@ -64,12 +61,13 @@ do
 
     echo "Setting up Laravel project in $p"
 
+    setup_githooks "$p"
+    setup_nix "$p"
     echo layout php >> "$p/.envrc"
+    direnv allow "$p" 
 
-    echo "Creating Psalm config file"
     cd "$p" || return
-    direnv exec "$p" psalm --init
-    echo "psalm.xml" >> "$p/.git/info/exclude"
+    direnv exec "$p" "$here/bash/laravel.bash"
 done
 
 # Set up Angular projects
@@ -79,12 +77,13 @@ do
 
     echo "Setting up Angular project in $p"
 
+    setup_githooks "$p"
+    setup_nix "$p"
     echo layout node >> "$p/.envrc"
+    direnv allow "$p" 
 
-    echo "Installing ngserver"
     cd "$p" || return
-    direnv exec "$p" npm ci
-    direnv exec "$p" npm install --no-save @angular/language-server
+    direnv exec "$p" "$here/bash/angular.bash"
 done
 
 for project in "${RAILS_PROJECTS[@]}"
@@ -93,24 +92,12 @@ do
 
     echo "Setting up Rails project in $p"
 
-    ln -s -f "$here/rails/solargraph.yml" "$p/.solargraph.yml"
+    setup_githooks "$p"
+    setup_nix "$p"
+    direnv allow "$p" 
 
-    cat >> "$p/.git/info/exclude" << EOF
-.solargraph.yml
-app/rails.rb
-gemset.nix
-gemset.project.nix
-EOF
-
-    # Install gems and set up Solargraph
-    (
-        cd "$p" || return
-        nix-shell -p bundix --run 'bundix --gemset=gemset.project.nix'
-        cp "$here/rails/gemset.nix" gemset.nix
-        direnv exec "$p" solargraph download-core
-        direnv exec "$p" solargraph bundle
-        # Add shim file for solargraph (may not be necessary if we're using solargraph-rails
-        # cd "$p/app" | return
-        # nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
-    )
+    cd "$p" || return
+    direnv exec "$p" "$here/bash/rails.bash"
 done
+
+echo "Setup complete!"
