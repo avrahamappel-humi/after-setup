@@ -1,24 +1,14 @@
-{ pkgs ? import <nixpkgs> { } }:
-
 let
-  bundix = (pkgs.fetchFromGitHub {
-    owner = "sagittaros";
-    repo = "bundix";
-    rev = "4e0d18a";
-    sha256 = "sha256-KDKdesIUpyM6YnGsZMOxN34NhTNCsXvd03qsHNtUdWc=";
-  });
+  ruby-nix = builtins.getFlake "github:sagittaros/ruby-nix/ce2b0e67e745c3cce52aad9e89935cbb3f34807c";
 
-  rubyNixBuilder = import
-    (pkgs.fetchFromGitHub {
-      owner = "sagittaros";
-      repo = "ruby-nix";
-      rev = "b4f3bc5";
-      sha256 = "sha256-cx9E+VEUmoiRcaANkECzZKZQyj3IG5YMntZMRzbvHQ4=";
-    })
-    bundix;
+  pkgs = import <nixpkgs> {
+    overlays = [ ruby-nix.overlays.ruby ];
+  };
 
+  project = "${builtins.getEnv "HOME"}/humility/applications/payroll";
 
-  rubyNix = rubyNixBuilder (pkgs // {
+  # Need to ignore collisions
+  rubyNix = ruby-nix.lib (pkgs // {
     buildEnv = args: pkgs.buildEnv (args // {
       ignoreCollisions = true;
     });
@@ -27,11 +17,12 @@ let
   bundlerEnv = rubyNix {
     name = "payroll-bundler-env";
     ruby = pkgs.ruby_3_1;
-    gemset = "${builtins.getEnv "HOME"}/humility/applications/payroll/gemset.nix";
+    gemset = "${project}/gemset.nix";
   };
 in
 pkgs.mkShell {
   buildInputs = [
     bundlerEnv.env
+    bundlerEnv.ruby
   ];
 }
