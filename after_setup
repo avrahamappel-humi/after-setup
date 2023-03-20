@@ -60,9 +60,6 @@ do
     setup_nix "$p"
     echo layout php >> "$p/.envrc"
     direnv allow "$p" 
-
-    cd "$p" || return
-    direnv exec "$p" "$here/bash/laravel.bash"
 done
 
 # Set up Angular projects
