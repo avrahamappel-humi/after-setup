@@ -1,12 +1,11 @@
 { pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
 
 let
-  php = pkgs.php81;
-
-  phpTools = import ./php-tools.nix { inherit pkgs php; };
+  phpTools = import ./php-tools.nix;
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
+    php81
     php81Packages.composer
     phpTools
     nodejs-16_x

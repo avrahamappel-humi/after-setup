@@ -1,16 +1,7 @@
-{ pkgs, php }:
-
 let
-  php' = php.buildEnv {
-    extraConfig = "memory_limit=8G";
-  };
-  phpactor = import ./phpactor {
-    inherit pkgs;
-    php = php';
-  };
+  phpTools = (builtins.getFlake (builtins.toString ./phpactor)).packages.${builtins.currentSystem};
 in
 [
-  php'
-  phpactor
-  php.packages.psalm
+  phpTools.phpactor
+  phpTools.psalm
 ]
