@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
+{ pkgs ? import <nixpkgs> { } }:
 
 let
   php = pkgs.php81.withExtensions ({ enabled, all }: enabled ++ [ all.imagick ]);
@@ -9,7 +9,6 @@ pkgs.mkShell
 {
   buildInputs = with pkgs; [
     nodejs # For Prettier
-    nodePackages.intelephense
     php
     php.packages.composer
     phpTools

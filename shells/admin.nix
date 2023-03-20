@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
+{ pkgs ? import <nixpkgs> { } }:
 
 let
   phpTools = import ./php-tools.nix;
@@ -9,7 +9,6 @@ pkgs.mkShell {
     php81Packages.composer
     phpTools
     nodejs-16_x
-    nodePackages.intelephense
     nodePackages.vls
     yarn
   ];
