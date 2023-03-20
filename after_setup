@@ -46,11 +46,6 @@ function setup_nix {
         else
             echo use nix > "$p/.envrc"
         fi
-
-        cat >> "$p/.git/info/exclude" << EOF
-.direnv/
-.envrc
-EOF
     fi
 }
 
