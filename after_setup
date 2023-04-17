@@ -87,7 +87,7 @@ do
     setup_githooks "$p"
     setup_nix "$p"
     echo "layout ruby" >> "$p/.envrc"
-    direnv allow
+    direnv allow "$p"
 
     cd "$p" || return
     direnv exec "$p" "$here/bash/rails.bash"

@@ -4,5 +4,4 @@
 
 echo "Installing ngserver"
 
-npm ci
 npm install --no-save @angular/language-server
