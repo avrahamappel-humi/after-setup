@@ -4,19 +4,21 @@
 
 here=$(dirname "$(realpath "$0")")
 
-ln -s -f "$here/rails/solargraph.yml" .solargraph.yml
+ln -s -f "$here/../rails/solargraph.yml" .solargraph.yml
 
 cat >> .git/info/exclude << EOF
 .solargraph.yml
 app/rails.rb
-gemset.nix
-gemset.project.nix
 EOF
 
 # Bundle the project gems using Nix
-nix-shell -p bundix --run 'bundix --gemset=gemset.project.nix'
+bundle config build.thin -fdeclspec
+bundle install
+# rm gemset*
+# nix run github:sagittaros/bundix/8cea9709a06a458179f9677c244801ed944c2fc9
+# mv gemset.nix gemset.project.nix
 # Include the solargraph gems
-cp "$here/rails/gemset.nix" gemset.nix
+# cp "$here/../rails/gemset.nix" gemset.nix
 solargraph download-core
 solargraph bundle
 # Add shim file for solargraph (may not be necessary if we're using solargraph-rails
