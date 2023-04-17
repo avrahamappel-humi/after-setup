@@ -58,7 +58,7 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
-    echo layout php >> "$p/.envrc"
+    echo "layout php" >> "$p/.envrc"
     direnv allow "$p" 
 done
 
@@ -71,7 +71,7 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
-    echo layout node >> "$p/.envrc"
+    echo "layout node" >> "$p/.envrc"
     direnv allow "$p" 
 
     cd "$p" || return
@@ -86,7 +86,8 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
-    direnv allow "$p" 
+    echo "layout ruby" >> "$p/.envrc"
+    direnv allow
 
     cd "$p" || return
     direnv exec "$p" "$here/bash/rails.bash"
