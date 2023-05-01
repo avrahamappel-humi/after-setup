@@ -49,6 +49,19 @@ function setup_nix {
     fi
 }
 
+# Add local Vim config files
+function setup_local_vimrc {
+    p="$1"
+    vimrc="$here/vim/$(basename "$p").lua"
+
+    if test -f "$vimrc"
+    then
+        echo "Installing local Vim config"
+
+        ln -s -f "$vimrc" "$p/.vimrc.lua"
+    fi
+}
+
 # Set up Laravel projects
 for project in "${LARAVEL_PROJECTS[@]}"
 do
@@ -58,6 +71,7 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
+    setup_local_vimrc "$p"
     echo "layout php" >> "$p/.envrc"
     direnv allow "$p" 
 done
@@ -71,6 +85,7 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
+    setup_local_vimrc "$p"
     echo "layout node" >> "$p/.envrc"
     direnv allow "$p" 
 
@@ -86,6 +101,7 @@ do
 
     setup_githooks "$p"
     setup_nix "$p"
+    setup_local_vimrc "$p"
     echo "layout ruby" >> "$p/.envrc"
     direnv allow "$p"
 
