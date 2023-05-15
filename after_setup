@@ -52,7 +52,7 @@ function setup_nix {
 # Add local Vim config files
 function setup_local_vimrc {
     p="$1"
-    vimrc="$here/vim/$(basename "$p").lua"
+    vimrc="$here/vimrc/$(basename "$p").lua"
 
     if test -f "$vimrc"
     then
