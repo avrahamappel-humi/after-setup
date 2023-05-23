@@ -1,11 +1,4 @@
 { pkgs ? import <nixpkgs> { } }:
 
-pkgs.mkShell {
-  buildInputs = with pkgs;
-    [
-      nodejs
-      nodePackages.npm
-      nodePackages.typescript-language-server
-      yarn
-    ];
-}
+# with (import ./dev-env.nix); buildDevEnv (withTypescript (withAngular { }))
+with (import ./dev-env.nix); buildDevEnv (withTypescript { })
