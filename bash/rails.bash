@@ -24,3 +24,6 @@ solargraph bundle
 # Add shim file for solargraph (may not be necessary if we're using solargraph-rails
 nix-shell -p wget --run "wget 'https://gist.githubusercontent.com/castwide/28b349566a223dfb439a337aea29713e/raw/715473535f11cf3eeb9216d64d01feac2ea37ac0/rails.rb'"
 mv rails.rb app/rails.rb
+
+echo 'Setting up Git hooks'
+bundle exec lefthook install
