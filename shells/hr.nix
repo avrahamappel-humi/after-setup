@@ -8,9 +8,10 @@ in
 pkgs.mkShell
 {
   buildInputs = with pkgs; [
-    nodejs # For Prettier
+    nodejs_20 # For Prettier
     php
     php.packages.composer
     phpTools
+    yarn
   ];
 }
