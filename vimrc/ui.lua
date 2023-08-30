@@ -1,7 +1,6 @@
 local servers = {
     'angularls',
     'eslint',
-    'tsserver',
 }
 
 local root_dirs = {
