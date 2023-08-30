@@ -21,8 +21,7 @@ local settings = {
 
 local commands = {
     phpactor = {
-        -- "phpactor",
-        "/Users/avrahamappel/forks/phpactor/bin/phpactor",
+        "phpactor",
         "language-server",
     }
 }

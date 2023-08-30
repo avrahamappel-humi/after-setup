@@ -2,8 +2,6 @@
 
 let
   php = pkgs.php81.withExtensions ({ enabled, all }: enabled ++ [ all.imagick ]);
-
-  phpTools = import ./php-tools.nix;
 in
 pkgs.mkShell
 {
@@ -11,7 +9,8 @@ pkgs.mkShell
     nodejs_20 # For Prettier
     php
     php.packages.composer
-    phpTools
+    php.packages.psalm
+    phpactor
     yarn
   ];
 }

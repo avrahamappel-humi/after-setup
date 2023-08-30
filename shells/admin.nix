@@ -1,13 +1,11 @@
 { pkgs ? import <nixpkgs> { config.permittedInsecurePackages = [ "nodejs-16.20.1" ]; } }:
 
-let
-  phpTools = import ./php-tools.nix;
-in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     php81
     php81Packages.composer
-    phpTools
+    php81Packages.psalm
+    phpactor
     nodejs-16_x
     nodePackages.vls
     yarn
