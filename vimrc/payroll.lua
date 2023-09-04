@@ -1,1 +1,3 @@
-RegisterLsp('solargraph', {})
+registerLsps {
+    lsps = { 'solargraph' }
+}
