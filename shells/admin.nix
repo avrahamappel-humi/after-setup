@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { config.permittedInsecurePackages = [ "nodejs-16.20.1" ]; } }:
+{ pkgs ? import <nixpkgs> { config.permittedInsecurePackages = [ "nodejs-16.20.2" ]; } }:
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
